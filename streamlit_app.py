@@ -15,14 +15,18 @@ if "step" not in st.session_state:
 if "accepted" not in st.session_state:
     st.session_state.accepted = False
 
-# ---------------- TYPEWRITER ----------------
+# ---------------- FAST TYPEWRITER ----------------
 def typewriter(text):
+    if not text or text.strip() == "":  # Empty line - just show it
+        st.markdown(f"<div class='text'><br></div>", unsafe_allow_html=True)
+        return
+    
     placeholder = st.empty()
     shown = ""
     for c in text:
         shown += c
         placeholder.markdown(f"<div class='text'>{shown}</div>", unsafe_allow_html=True)
-        time.sleep(0.2)  # 0.2 seconds per character
+        time.sleep(0.03)  # Fast typing effect
 
 # ---------------- STORY ----------------
 story = [
@@ -113,29 +117,31 @@ html, body, [data-testid="stAppViewContainer"] {
 """, unsafe_allow_html=True)
 
 # ---------------- BACKGROUND MUSIC ----------------
-st.markdown("<div style='text-align: center; margin: 30px 0 20px 0;'>", unsafe_allow_html=True)
-st.markdown("### 🎵 A Thousand Years - Christina Perri 🎵", unsafe_allow_html=True)
+# Centered compact player at top
+col1, col2, col3 = st.columns([1, 2, 1])
 
-try:
-    audio_file = open('song.mp3', 'rb')
-    audio_bytes = audio_file.read()
-    st.audio(audio_bytes, format='audio/mp3')
-except:
+with col2:
+    st.markdown("<div style='text-align: center; font-size: 14px; color: #ff6b9d; margin-top: 10px;'>🎵 A Thousand Years - Christina Perri</div>", unsafe_allow_html=True)
+    
     try:
-        # Try with full filename if song.mp3 doesn't exist
-        audio_file = open('Christina Perri - A Thousand Years [Official Music Video].mp3', 'rb')
+        audio_file = open('song.mp3', 'rb')
         audio_bytes = audio_file.read()
         st.audio(audio_bytes, format='audio/mp3')
     except:
-        st.markdown("*Music file not found*", unsafe_allow_html=True)
+        try:
+            audio_file = open('Christina Perri - A Thousand Years [Official Music Video].mp3', 'rb')
+            audio_bytes = audio_file.read()
+            st.audio(audio_bytes, format='audio/mp3')
+        except:
+            pass
 
-st.markdown("</div>", unsafe_allow_html=True)
+st.markdown("<hr style='border: 1px solid #333; margin: 20px 0;'>", unsafe_allow_html=True)
 
 # ---------------- FLOW ----------------
 if not st.session_state.accepted and st.session_state.step < len(story):
     typewriter(story[st.session_state.step])
 
-    if st.button("Continue 💫"):
+    if st.button("Continue 💫", key=f"continue_{st.session_state.step}"):
         st.session_state.step += 1
         st.rerun()
 
@@ -148,7 +154,7 @@ elif not st.session_state.accepted:
     
     st.markdown("<br><br>", unsafe_allow_html=True)
     
-    # YES button using Streamlit (reliable)
+    # YES button
     col1, col2, col3 = st.columns([2, 1, 2])
     
     with col2:
@@ -159,7 +165,7 @@ elif not st.session_state.accepted:
     
     st.markdown("<br>", unsafe_allow_html=True)
     
-    # NO button with movement (interactive)
+    # NO button
     components.html("""
     <style>
     body {
@@ -199,7 +205,7 @@ elif not st.session_state.accepted:
     """, height=150)
 
 else:
-    # THIS IS THE MESSAGE AFTER SHE SAYS YES - GUARANTEED TO SHOW NOW!
+    # Message after YES
     st.balloons()
     
     st.markdown(f"""
@@ -227,5 +233,3 @@ st.markdown(f"""
 ⏳ {days} days until Valentine's Day 💞
 </div>
 """, unsafe_allow_html=True)
-
-
