@@ -1,6 +1,6 @@
 import streamlit as st
+import streamlit.components.v1 as components
 import time
-import random
 from datetime import datetime
 
 # ---------------- CONFIG ----------------
@@ -20,21 +20,54 @@ params = st.query_params
 if params.get("yes") == "1":
     st.session_state.accepted = True
 
-# ---------------- STYLES + JS ----------------
+# ---------------- TYPEWRITER ----------------
+def typewriter(text):
+    placeholder = st.empty()
+    shown = ""
+    for c in text:
+        shown += c
+        placeholder.markdown(f"<div class='text'>{shown}</div>", unsafe_allow_html=True)
+        time.sleep(0.03)
+
+# ---------------- STORY ----------------
+story = [
+    f"{NAME}, before you scroll away… 💖",
+    "May 5th — that's when things changed between us.",
+    "June 7th — that's when we became *us*.",
+    "Then life happened.",
+    "I had to leave for Kerala… for six long months.",
+    "And you waited.",
+    "You really waited for me.",
+    "",
+    "Every hug when I came back felt like home.",
+    "Every cuddle reminded me I was safe.",
+    "You made me happier than I ever expected.",
+    "I know we had a lot of fights.",
+    "I know I was never a perfect boyfriend.",
+    "There were moments I didn't understand you the way I should have.",
+    "Moments where my silence hurt more than words.",
+    "Times where I wish I could go back and do things better.",
+    "But through every argument…",
+    "Every misunderstanding…",
+    "One thing never changed — I loved you.",
+    "Not the easy kind of love.",
+    "But the kind that stays.",
+    "Even when things get messy, confusing, or difficult.",
+    "I don't want to promise perfection.",
+    "I want to promise effort.",
+    "Effort to listen more.",
+    "To understand you deeper.",
+    "To grow — not just for myself, but for us.",
+    "If love is choosing someone again and again…",
+    "Then my heart has always chosen you. 💗",
+]
+
+# ---------------- STYLES ----------------
 st.markdown("""
 <style>
-html, body {
-    height: 100%;
-    background: radial-gradient(circle at top, #1a1a1a, #000);
+html, body, [data-testid="stAppViewContainer"] {
+    background: radial-gradient(circle at top, #1a1a1a, #000) !important;
     color: white;
-    overflow-x: hidden;
-    animation: heartbeat 3s infinite;
-}
-
-@keyframes heartbeat {
-    0% { background-size: 100% 100%; }
-    50% { background-size: 104% 104%; }
-    100% { background-size: 100% 100%; }
 }
 
 .text {
@@ -50,153 +83,8 @@ html, body {
     from { opacity: 0; transform: translateY(30px); }
     to { opacity: 1; transform: translateY(0); }
 }
-
-.buttons {
-    position: relative;
-    height: 200px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 80px;
-}
-
-button {
-    font-size: 20px;
-    padding: 14px 36px;
-    border-radius: 30px;
-    border: none;
-    cursor: pointer;
-}
-
-#yes {
-    background: #ff4d6d;
-    color: white;
-}
-
-#no {
-    background: #444;
-    color: white;
-    position: absolute;
-}
-
-#fadeBlack {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: black;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 3s ease;
-    z-index: 9999;
-}
-
-#fadeBlack.show {
-    opacity: 1;
-}
-
-svg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    pointer-events: none;
-    z-index: 9998;
-}
 </style>
-
-<script>
-function moveNo(btn){
-    const x = Math.random() * (window.innerWidth - 150);
-    const y = Math.random() * (window.innerHeight - 150);
-    btn.style.left = x + "px";
-    btn.style.top = y + "px";
-}
-
-function heartFireworks(){
-    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute("width", window.innerWidth);
-    svg.setAttribute("height", window.innerHeight);
-
-    for(let i=0;i<40;i++){
-        const heart = document.createElementNS("http://www.w3.org/2000/svg", "path");
-        heart.setAttribute("d","M10 30 A20 20 0 0 1 50 30 Q50 60 10 90 Q-30 60 -30 30 A20 20 0 0 1 10 30 Z");
-        heart.setAttribute("fill","pink");
-
-        const x = Math.random() * window.innerWidth;
-        const y = window.innerHeight;
-        const scale = Math.random() * 0.6 + 0.4;
-
-        heart.setAttribute("transform", `translate(${x},${y}) scale(${scale})`);
-
-        svg.appendChild(heart);
-
-        heart.animate([
-            { transform: `translate(${x}px,${y}px) scale(${scale})`, opacity: 1 },
-            { transform: `translate(${x + (Math.random()*200-100)}px,${y-600}px) scale(${scale})`, opacity: 0 }
-        ], {
-            duration: 2500,
-            easing: "ease-out"
-        });
-    }
-
-    document.body.appendChild(svg);
-    setTimeout(()=>svg.remove(),3000);
-}
-
-function finale(){
-    heartFireworks();
-    document.getElementById("fadeBlack").classList.add("show");
-    setTimeout(() => {
-        window.location.search = "?yes=1";
-    }, 1500);
-}
-</script>
-
-<div id="fadeBlack"></div>
 """, unsafe_allow_html=True)
-
-# ---------------- TYPEWRITER ----------------
-def typewriter(text):
-    placeholder = st.empty()
-    shown = ""
-    for c in text:
-        shown += c
-        placeholder.markdown(f"<div class='text'>{shown}</div>", unsafe_allow_html=True)
-        time.sleep(0.03)
-
-# ---------------- STORY ----------------
-story = [
-    f"{NAME}, before you scroll away… 💖",
-    "May 5th — that’s when things changed between us.",
-    "June 7th — that’s when we became *us*.",
-    "Then life happened.",
-    "I had to leave for Kerala… for six long months.",
-    "And you waited.",
-    "You really waited for me.",
-    "",
-    "Every hug when I came back felt like home.",
-    "Every cuddle reminded me I was safe.",
-    "You made me happier than I ever expected.",
-    "I know we had a lot of fights.",
-    "I know I was never a perfect boyfriend.",
-    "There were moments I didn’t understand you the way I should have.",
-    "Moments where my silence hurt more than words.",
-    "Times where I wish I could go back and do things better.",
-    "But through every argument…",
-    "Every misunderstanding…",
-    "One thing never changed — I loved you.",
-    "Not the easy kind of love.",
-    "But the kind that stays.",
-    "Even when things get messy, confusing, or difficult.",
-    "I don’t want to promise perfection.",
-    "I want to promise effort.",
-    "Effort to listen more.",
-    "To understand you deeper.",
-    "To grow — not just for myself, but for us.",
-    "If love is choosing someone again and again…",
-    "Then my heart has always chosen you. 💗",
-]
 
 # ---------------- FLOW ----------------
 if not st.session_state.accepted and st.session_state.step < len(story):
@@ -211,17 +99,133 @@ elif not st.session_state.accepted:
     <div class="text">
         Will you be my Valentine? 💘
     </div>
+    """, unsafe_allow_html=True)
+    
+    # Use components.html for interactive buttons with JavaScript
+    components.html("""
+    <style>
+    body {
+        margin: 0;
+        background: transparent;
+        overflow: hidden;
+    }
+    
+    .buttons {
+        position: relative;
+        height: 200px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 80px;
+    }
+
+    button {
+        font-size: 20px;
+        padding: 14px 36px;
+        border-radius: 30px;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    #yes {
+        background: #ff4d6d;
+        color: white;
+    }
+
+    #no {
+        background: #444;
+        color: white;
+        position: absolute;
+    }
+
+    #fadeBlack {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: black;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 3s ease;
+        z-index: 9999;
+    }
+
+    #fadeBlack.show {
+        opacity: 1;
+    }
+
+    svg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        z-index: 9998;
+    }
+    </style>
+
+    <div id="fadeBlack"></div>
+    
     <div class="buttons">
         <button id="yes" onclick="finale()">YES 💖</button>
         <button id="no" onmouseover="moveNo(this)">NO 🙃</button>
     </div>
-    """, unsafe_allow_html=True)
+
+    <script>
+    function moveNo(btn){
+        const x = Math.random() * (window.innerWidth - 150);
+        const y = Math.random() * (window.innerHeight - 100);
+        btn.style.left = x + "px";
+        btn.style.top = y + "px";
+    }
+
+    function heartFireworks(){
+        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svg.setAttribute("width", window.innerWidth);
+        svg.setAttribute("height", window.innerHeight);
+
+        for(let i=0;i<40;i++){
+            const heart = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            heart.setAttribute("d","M10 30 A20 20 0 0 1 50 30 Q50 60 10 90 Q-30 60 -30 30 A20 20 0 0 1 10 30 Z");
+            heart.setAttribute("fill","pink");
+
+            const x = Math.random() * window.innerWidth;
+            const y = window.innerHeight;
+            const scale = Math.random() * 0.6 + 0.4;
+
+            heart.setAttribute("transform", `translate(${x},${y}) scale(${scale})`);
+
+            svg.appendChild(heart);
+
+            heart.animate([
+                { transform: `translate(${x}px,${y}px) scale(${scale})`, opacity: 1 },
+                { transform: `translate(${x + (Math.random()*200-100)}px,${y-600}px) scale(${scale})`, opacity: 0 }
+            ], {
+                duration: 2500,
+                easing: "ease-out"
+            });
+        }
+
+        document.body.appendChild(svg);
+        setTimeout(()=>svg.remove(),3000);
+    }
+
+    function finale(){
+        heartFireworks();
+        document.getElementById("fadeBlack").classList.add("show");
+        setTimeout(() => {
+            window.parent.location.search = "?yes=1";
+        }, 1500);
+    }
+    </script>
+    """, height=300)
 
 else:
     st.balloons()
     st.markdown(f"""
     <div class="text">
-        💖 You’re officially my Valentine 💖<br><br>
+        💖 You're officially my Valentine 💖<br><br>
         I love you, {NAME}.
     </div>
     """, unsafe_allow_html=True)
@@ -232,6 +236,6 @@ days = (val_day - datetime.now()).days
 
 st.markdown(f"""
 <div style="text-align:center; margin-top:60px; opacity:0.8;">
-⏳ {days} days until Valentine’s Day 💞
+⏳ {days} days until Valentine's Day 💞
 </div>
 """, unsafe_allow_html=True)
