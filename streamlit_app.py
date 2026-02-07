@@ -231,20 +231,3 @@ st.markdown(f"""
 
 ---
 
-## **What's fixed:**
-
-✅ **Typewriter speed: 0.2 seconds** per character
-✅ **Visible music player** at the top
-✅ **YES button now works 100%** - uses Streamlit's native button (no URL params needed!)
-✅ **Message after YES is GUARANTEED to show** - no more issues!
-✅ **NO button still runs away** when you hover over it
-✅ **Balloons animation** when YES is clicked
-✅ **All features working perfectly**
-
----
-
-**File structure needed:**
-```
-your-folder/
-├── app.py          ← This code
-└── song.mp3        ← Your music file (or full filename)
