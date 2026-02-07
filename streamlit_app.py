@@ -1,6 +1,7 @@
 import streamlit as st
 import streamlit.components.v1 as components
 import time
+import base64
 from datetime import datetime
 
 # ---------------- CONFIG ----------------
@@ -15,9 +16,9 @@ if "step" not in st.session_state:
 if "accepted" not in st.session_state:
     st.session_state.accepted = False
 
-# Detect YES click via query param
-params = st.query_params
-if params.get("yes") == "1":
+# CHECK IF YES WAS CLICKED - FIXED VERSION
+query_params = st.query_params.to_dict()
+if "yes" in query_params:
     st.session_state.accepted = True
 
 # ---------------- TYPEWRITER ----------------
@@ -27,44 +28,54 @@ def typewriter(text):
     for c in text:
         shown += c
         placeholder.markdown(f"<div class='text'>{shown}</div>", unsafe_allow_html=True)
-        time.sleep(0.03)
+        time.sleep(0.01)
 
 # ---------------- STORY ----------------
 story = [
     f"{NAME}, before you scroll away… 💖",
     "May 5th — that's when things changed between us.",
     "June 7th — that's when we became *us*.",
+    "",
     "Then life happened.",
     "I had to leave for Kerala… for six long months.",
     "And you waited.",
     "You really waited for me.",
+    "",
     "Every hug when I came back felt like home.",
     "Every cuddle reminded me I was safe.",
     "You made me happier than I ever expected.",
+    "",
     "Thank you for always being there.",
     "Thank you for loving me on my worst days.",
     "Thank you for seeing the best in me, even when I couldn't see it myself.",
+    "",
     "I know we had a lot of fights.",
     "I know I was never a perfect boyfriend.",
     "There were moments I didn't understand you the way I should have.",
     "Moments where my silence hurt more than words.",
     "Times where I wish I could go back and do things better.",
+    "",
     "But through every argument…",
     "Every misunderstanding…",
     "One thing never changed — I loved you.",
+    "",
     "Not the easy kind of love.",
     "But the kind that stays.",
     "Even when things get messy, confusing, or difficult.",
+    "",
     "Thank you for never giving up on us.",
     "Thank you for your patience, your kindness, your heart.",
     "You've given me more than I ever deserved.",
+    "",
     "I don't want to promise perfection.",
     "I want to promise effort.",
     "Effort to listen more.",
     "To understand you deeper.",
     "To grow — not just for myself, but for us.",
+    "",
     "If love is choosing someone again and again…",
     "Then my heart has always chosen you. 💗",
+    "",
     "Thank you for choosing me too.",
 ]
 
@@ -91,6 +102,22 @@ html, body, [data-testid="stAppViewContainer"] {
 }
 </style>
 """, unsafe_allow_html=True)
+
+# ---------------- BACKGROUND MUSIC ----------------
+try:
+    # Read and encode the audio file
+    audio_file = open('song.mp3', 'rb')
+    audio_bytes = audio_file.read()
+    audio_base64 = base64.b64encode(audio_bytes).decode()
+    
+    # Hidden autoplay audio
+    st.markdown(f"""
+    <audio autoplay loop style="display:none">
+        <source src="data:audio/mp3;base64,{audio_base64}" type="audio/mp3">
+    </audio>
+    """, unsafe_allow_html=True)
+except:
+    pass  # If music file not found, just continue without it
 
 # ---------------- FLOW ----------------
 if not st.session_state.accepted and st.session_state.step < len(story):
@@ -221,21 +248,20 @@ elif not st.session_state.accepted:
         heartFireworks();
         document.getElementById("fadeBlack").classList.add("show");
         setTimeout(() => {
-            window.parent.location.search = "?yes=1";
+            window.parent.location.href = window.parent.location.origin + window.parent.location.pathname + "?yes=1";
         }, 1500);
     }
     </script>
     """, height=300)
 
 else:
+    # THIS IS THE MESSAGE AFTER SHE SAYS YES
     st.balloons()
-    
-    # Special message after she says YES
     st.markdown(f"""
-    <div class="text" style="animation: fadeUp 1.5s ease forwards;">
+    <div class="text">
         💖 You're officially my Valentine 💖<br><br>
         
-        Thank you for saying yes.<br>
+        Thank you for saying yes, {NAME}.<br>
         Thank you for being mine.<br>
         Thank you for being you.<br><br>
         
@@ -243,10 +269,16 @@ else:
         I promise to make you smile more than I make you cry.<br>
         I promise to always choose you.<br><br>
         
-        This Valentine's Day, and every day after,<br>
-        you're my favorite person in the world.<br><br>
-        
-        I love you, {NAME}. ❤️<br>
-        Forever and always.
+        I love you. Today, tomorrow, always. ❤️
     </div>
     """, unsafe_allow_html=True)
+
+# ---------------- COUNTDOWN ----------------
+val_day = datetime(datetime.now().year, 2, 14)
+days = (val_day - datetime.now()).days
+
+st.markdown(f"""
+<div style="text-align:center; margin-top:60px; opacity:0.8;">
+⏳ {days} days until Valentine's Day 💞
+</div>
+""", unsafe_allow_html=True)
