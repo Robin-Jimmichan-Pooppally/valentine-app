@@ -57,7 +57,7 @@ story = [
     "Then my heart has always chosen you. 💗",
 ]
 
-# ---------------- UI ----------------
+# ---------------- UI + ANIMATIONS ----------------
 st.markdown(
     """
     <style>
@@ -65,6 +65,7 @@ st.markdown(
         background: radial-gradient(circle at top, #1c1c1c, #000);
         color: white;
     }
+
     .story {
         text-align: center;
         margin-top: 100px;
@@ -73,14 +74,27 @@ st.markdown(
         max-width: 850px;
         margin-left: auto;
         margin-right: auto;
-        animation: fadeIn 1.2s ease-in-out;
+        animation: cinematic 1.2s ease forwards;
     }
+
+    @keyframes cinematic {
+        from {
+            opacity: 0;
+            transform: translateY(25px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
     .buttons {
         display: flex;
         justify-content: center;
         gap: 40px;
         margin-top: 40px;
     }
+
     button {
         font-size: 20px;
         padding: 12px 30px;
@@ -88,26 +102,39 @@ st.markdown(
         border: none;
         cursor: pointer;
     }
+
     #yes {
         background: #ff4d6d;
         color: white;
     }
+
     #no {
         background: #444;
         color: white;
         position: relative;
         left: VARLEFTpx;
     }
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
+
+    /* ❤️ Heart fireworks */
+    .hearts {
+        position: fixed;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        pointer-events: none;
+        animation: rise 2s ease-out forwards;
+    }
+
+    @keyframes rise {
+        from { opacity: 1; transform: translate(-50%, 0); }
+        to { opacity: 0; transform: translate(-50%, -600px); }
     }
     </style>
     """.replace("VARLEFT", str(st.session_state.no_pos)),
     unsafe_allow_html=True
 )
 
-# 🎶 Background music placeholder (add MP3 later)
+# 🎶 Background music placeholder (add later)
 # st.audio("love.mp3", loop=True)
 
 # ---------------- STORY FLOW ----------------
@@ -134,7 +161,7 @@ if not st.session_state.finished:
 else:
     # ---------------- FINAL QUESTION ----------------
     st.markdown(
-        f"""
+        """
         <div class="story">
             So here’s my question… 💖<br><br>
             <strong>Will you be my Valentine?</strong>
@@ -151,10 +178,14 @@ else:
 
     with col1:
         if st.button("YES 💘"):
-            st.balloons()
+            for _ in range(6):
+                st.markdown(
+                    "<div class='hearts'>❤️ 💖 💘 💝 💗</div>",
+                    unsafe_allow_html=True
+                )
             st.success("YAY 💖 I LOVE YOU!")
 
     with col2:
         if st.button("NO 🙃"):
             st.session_state.no_pos = random.randint(-200, 200)
-            st.warning("Nice try 😈")
+            st.warning("Nope 😈 Try again")
