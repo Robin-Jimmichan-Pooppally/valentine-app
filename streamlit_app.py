@@ -101,7 +101,8 @@ elif st.session_state.step == 1:
 
 # ---------- STEP 2 (QUESTION) ----------
 elif st.session_state.step == 2:
-    st.markdown("""
+    st.markdown(
+        """
         <style>
         .container {
             display:flex;
@@ -163,7 +164,9 @@ elif st.session_state.step == 2:
             window.location.search = "?yes=1";
         });
         </script>
-    """, unsafe_allow_html=True)
+        """,
+        unsafe_allow_html=True
+    )
 
     if "yes" in st.query_params:
         st.session_state.step = 3
