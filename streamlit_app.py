@@ -61,15 +61,17 @@ if "story_index" not in st.session_state:
     st.session_state.story_index = 0
 
 # ---------- STEP 0 ----------
-st.markdown(
-    f"""
-    <div style="text-align:center; margin-top:120px;">
-        <h2>{NAME}, before you scroll away… 💖</h2>
-        <p>there’s something I’ve been meaning to ask.</p>
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+if st.session_state.step == 0:
+    st.markdown(
+        f"""
+        <div style="text-align:center; margin-top:120px;">
+            <h2>{NAME}, before you scroll away… 💖</h2>
+            <p>there’s something I’ve been meaning to ask.</p>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
     if st.button("Continue 💫"):
         st.session_state.step = 1
         st.rerun()
