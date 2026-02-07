@@ -1,5 +1,7 @@
 import streamlit as st
 import random
+import time
+import datetime
 
 # ---------------- CONFIG ----------------
 st.set_page_config(page_title="💖 Valentine 💖", layout="wide")
@@ -13,15 +15,21 @@ if "story_index" not in st.session_state:
 if "finished" not in st.session_state:
     st.session_state.finished = False
 
-if "no_pos" not in st.session_state:
-    st.session_state.no_pos = random.randint(-120, 120)
+if "accepted" not in st.session_state:
+    st.session_state.accepted = False
+
+if "no_x" not in st.session_state:
+    st.session_state.no_x = random.randint(-200, 200)
+
+if "no_y" not in st.session_state:
+    st.session_state.no_y = random.randint(-80, 80)
 
 # ---------------- STORY ----------------
 story = [
     f"{NAME}, before you scroll away… 💖",
     "There’s something I’ve been meaning to ask.",
     "",
-    "May 6th — that’s when I met you.",
+    "May 5th — that’s when things changed between us.",
     "June 7th — that’s when we became *us*.",
     "",
     "Then life happened.",
@@ -57,13 +65,33 @@ story = [
     "Then my heart has always chosen you. 💗",
 ]
 
-# ---------------- UI + ANIMATIONS ----------------
+# ---------------- HELPERS ----------------
+def valentine_countdown():
+    now = datetime.datetime.now()
+    year = now.year
+    target = datetime.datetime(year, 2, 14, 0, 0)
+    if now > target:
+        target = datetime.datetime(year + 1, 2, 14, 0, 0)
+    delta = target - now
+    days = delta.days
+    hours, rem = divmod(delta.seconds, 3600)
+    minutes, _ = divmod(rem, 60)
+    return days, hours, minutes
+
+# ---------------- STYLES ----------------
 st.markdown(
     """
     <style>
     body {
         background: radial-gradient(circle at top, #1c1c1c, #000);
         color: white;
+        animation: heartbeat 3s infinite;
+    }
+
+    @keyframes heartbeat {
+        0% { background-size: 100% 100%; }
+        50% { background-size: 105% 105%; }
+        100% { background-size: 100% 100%; }
     }
 
     .story {
@@ -74,18 +102,12 @@ st.markdown(
         max-width: 850px;
         margin-left: auto;
         margin-right: auto;
-        animation: cinematic 1.2s ease forwards;
+        animation: fadeUp 1.2s ease forwards;
     }
 
-    @keyframes cinematic {
-        from {
-            opacity: 0;
-            transform: translateY(25px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(25px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 
     .buttons {
@@ -93,6 +115,8 @@ st.markdown(
         justify-content: center;
         gap: 40px;
         margin-top: 40px;
+        position: relative;
+        height: 140px;
     }
 
     button {
@@ -111,55 +135,42 @@ st.markdown(
     #no {
         background: #444;
         color: white;
-        position: relative;
-        left: VARLEFTpx;
-    }
-
-    /* ❤️ Heart fireworks */
-    .hearts {
-        position: fixed;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        pointer-events: none;
-        animation: rise 2s ease-out forwards;
-    }
-
-    @keyframes rise {
-        from { opacity: 1; transform: translate(-50%, 0); }
-        to { opacity: 0; transform: translate(-50%, -600px); }
+        position: absolute;
+        left: %dpx;
+        top: %dpx;
     }
     </style>
-    """.replace("VARLEFT", str(st.session_state.no_pos)),
+    """ % (st.session_state.no_x, st.session_state.no_y),
     unsafe_allow_html=True
 )
 
-# 🎶 Background music placeholder (add later)
-# st.audio("love.mp3", loop=True)
+# ---------------- TYPEWRITER ----------------
+def typewriter(text):
+    placeholder = st.empty()
+    shown = ""
+    for char in text:
+        shown += char
+        placeholder.markdown(
+            f"<div class='story'>{shown}</div>",
+            unsafe_allow_html=True
+        )
+        time.sleep(0.03)
 
 # ---------------- STORY FLOW ----------------
 if not st.session_state.finished:
-
-    st.markdown(
-        f"""
-        <div class="story">
-            {story[st.session_state.story_index]}
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    typewriter(story[st.session_state.story_index])
 
     st.write("")
-    st.write("")
-
     if st.button("Continue 💫"):
         if st.session_state.story_index < len(story) - 1:
             st.session_state.story_index += 1
+            st.rerun()
         else:
             st.session_state.finished = True
+            st.rerun()
 
-else:
-    # ---------------- FINAL QUESTION ----------------
+elif not st.session_state.accepted:
+    # ---------------- QUESTION ----------------
     st.markdown(
         """
         <div class="story">
@@ -178,14 +189,54 @@ else:
 
     with col1:
         if st.button("YES 💘"):
-            for _ in range(6):
-                st.markdown(
-                    "<div class='hearts'>❤️ 💖 💘 💝 💗</div>",
-                    unsafe_allow_html=True
-                )
-            st.success("YAY 💖 I LOVE YOU!")
+            st.session_state.accepted = True
+            st.rerun()
 
     with col2:
         if st.button("NO 🙃"):
-            st.session_state.no_pos = random.randint(-200, 200)
-            st.warning("Nope 😈 Try again")
+            st.session_state.no_x = random.randint(-300, 300)
+            st.session_state.no_y = random.randint(-120, 120)
+            st.rerun()
+
+else:
+    # ---------------- FINALE ----------------
+    days, hours, minutes = valentine_countdown()
+
+    st.markdown(
+        f"""
+        <div class="story">
+            <h1>YAY 💖</h1>
+            <h2>You’re officially my Valentine 😌</h2>
+            <p>⏳ {days} days, {hours} hours, {minutes} minutes to go</p>
+        </div>
+
+        <canvas id="fireworks"></canvas>
+
+        <script>
+        const canvas = document.getElementById("fireworks");
+        const ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        function firework() {{
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * canvas.height / 2;
+            for (let i = 0; i < 40; i++) {{
+                ctx.beginPath();
+                ctx.arc(x + Math.random()*80-40, y + Math.random()*80-40, 6, 0, 2*Math.PI);
+                ctx.fillStyle = ["#ff4d6d","#ff9ff3","#feca57","#ff6b81"][Math.floor(Math.random()*4)];
+                ctx.fill();
+            }}
+        }}
+
+        setInterval(() => {{
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            firework();
+        }}, 350);
+        </script>
+        """,
+        unsafe_allow_html=True
+    )
+
+    # 🎶 music ready (upload later)
+    # st.audio("love.mp3", loop=True)
