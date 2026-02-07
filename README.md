@@ -18,8 +18,3 @@ An interactive, romantic web application to ask your special someone to be your 
 ### Prerequisites
 - Python 3.7 or higher
 - A romantic heart ❤️
-
-### Installation
-
-1. **Clone the repository:**
-```bash
