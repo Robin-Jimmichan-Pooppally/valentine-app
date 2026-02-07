@@ -12,8 +12,13 @@ NAME = st.secrets.get("NAME", "You")
 if "step" not in st.session_state:
     st.session_state.step = 0
 
-if "finale" not in st.session_state:
-    st.session_state.finale = False
+if "accepted" not in st.session_state:
+    st.session_state.accepted = False
+
+# Detect YES click via query param
+params = st.query_params
+if params.get("yes") == "1":
+    st.session_state.accepted = True
 
 # ---------------- STYLES + JS ----------------
 st.markdown("""
@@ -52,7 +57,7 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 60px;
+    gap: 80px;
 }
 
 button {
@@ -142,6 +147,9 @@ function heartFireworks(){
 function finale(){
     heartFireworks();
     document.getElementById("fadeBlack").classList.add("show");
+    setTimeout(() => {
+        window.location.search = "?yes=1";
+    }, 1500);
 }
 </script>
 
@@ -158,54 +166,31 @@ def typewriter(text):
         time.sleep(0.03)
 
 # ---------------- STORY ----------------
-
 story = [
     f"{NAME}, before you scroll away… 💖",
     "May 5th — that’s when things changed between us.",
     "June 7th — that’s when we became *us*.",
-    "",
     "Then life happened.",
     "I had to leave for Kerala… for six long months.",
     "And you waited.",
     "You really waited for me.",
-    "",
     "Every hug when I came back felt like home.",
     "Every cuddle reminded me I was safe.",
-    "You made me happier than I ever expected.",
-    "",
     "I know we had a lot of fights.",
-    "I know I was never a perfect boyfriend.",
-    "There were moments I didn’t understand you the way I should have.",
-    "Moments where my silence hurt more than words.",
-    "Times where I wish I could go back and do things better.",
-    "",
-    "But through every argument…",
-    "Every misunderstanding…",
-    "One thing never changed — I loved you.",
-    "",
-    "Not the easy kind of love.",
-    "But the kind that stays.",
-    "Even when things get messy, confusing, or difficult.",
-    "",
-    "I don’t want to promise perfection.",
-    "I want to promise effort.",
-    "Effort to listen more.",
-    "To understand you deeper.",
-    "To grow — not just for myself, but for us.",
-    "",
+    "But one thing never changed — I loved you.",
     "If love is choosing someone again and again…",
     "Then my heart has always chosen you. 💗",
 ]
 
 # ---------------- FLOW ----------------
-if st.session_state.step < len(story):
+if not st.session_state.accepted and st.session_state.step < len(story):
     typewriter(story[st.session_state.step])
 
     if st.button("Continue 💫"):
         st.session_state.step += 1
         st.rerun()
 
-else:
+elif not st.session_state.accepted:
     st.markdown("""
     <div class="text">
         Will you be my Valentine? 💘
@@ -217,8 +202,14 @@ else:
     </div>
     """, unsafe_allow_html=True)
 
-    if st.button("I clicked YES 💕"):
-        st.balloons()
+else:
+    st.balloons()
+    st.markdown(f"""
+    <div class="text">
+        💖 You’re officially my Valentine 💖<br><br>
+        I love you, {NAME}.
+    </div>
+    """, unsafe_allow_html=True)
 
 # ---------------- COUNTDOWN ----------------
 val_day = datetime(datetime.now().year, 2, 14)
