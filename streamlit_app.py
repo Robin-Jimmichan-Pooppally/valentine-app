@@ -229,19 +229,25 @@ elif not st.session_state.accepted:
 
 else:
     st.balloons()
+    
+    # Special message after she says YES
     st.markdown(f"""
-    <div class="text">
+    <div class="text" style="animation: fadeUp 1.5s ease forwards;">
         💖 You're officially my Valentine 💖<br><br>
-        I love you, {NAME}.
+        
+        Thank you for saying yes.<br>
+        Thank you for being mine.<br>
+        Thank you for being you.<br><br>
+        
+        I promise to love you better every day.<br>
+        I promise to make you smile more than I make you cry.<br>
+        I promise to always choose you.<br><br>
+        
+        This Valentine's Day, and every day after,<br>
+        you're my favorite person in the world.<br><br>
+        
+        I love you, {NAME}. ❤️<br>
+        Forever and always.
     </div>
     """, unsafe_allow_html=True)
-
-# ---------------- COUNTDOWN ----------------
-val_day = datetime(datetime.now().year, 2, 14)
-days = (val_day - datetime.now()).days
-
-st.markdown(f"""
-<div style="text-align:center; margin-top:60px; opacity:0.8;">
-⏳ {days} days until Valentine's Day 💞
-</div>
 """, unsafe_allow_html=True)
