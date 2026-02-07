@@ -195,10 +195,10 @@ elif not st.session_state.accepted:
     """, height=150)
 
 else:
-    # Message after YES
+    # Message after YES - FIXED VERSION
     st.balloons()
     
-    st.markdown(f"""
+    message = f"""
     <div class="text" style="margin-top: 80px;">
         💖 You're officially my Valentine 💖<br><br>
         
@@ -212,7 +212,9 @@ else:
         
         I love you. Today, tomorrow, always. ❤️
     </div>
-    """, unsafe_allow_html=True)
+    """
+    
+    st.markdown(message, unsafe_allow_html=True)
 
 # ---------------- COUNTDOWN ----------------
 val_day = datetime(datetime.now().year, 2, 14)
