@@ -28,7 +28,7 @@ def typewriter(text):
     for c in text:
         shown += c
         placeholder.markdown(f"<div class='text'>{shown}</div>", unsafe_allow_html=True)
-        time.sleep(0.01)
+        time.sleep(0.02)
 
 # ---------------- STORY ----------------
 story = [
