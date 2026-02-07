@@ -162,7 +162,7 @@ elif st.session_state.step == 2:
         </script>
     """, unsafe_allow_html=True)
 
-    if st.experimental_get_query_params().get("yes"):
+    if "yes" in st.query_params:
         st.session_state.step = 3
         st.rerun()
 
