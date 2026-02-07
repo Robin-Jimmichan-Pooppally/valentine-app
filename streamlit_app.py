@@ -64,8 +64,8 @@ if "story_index" not in st.session_state:
 if st.session_state.step == 0:
     st.markdown("""
         <div style="text-align:center; margin-top:120px;">
-            <h2>Before you scroll away…</h2>
-            <p>there’s something I’ve been meaning to ask.</p>
+        <h2>{NAME}, before you scroll away… 💖</h2>
+        <p>there’s something I’ve been meaning to ask.</p>
         </div>
     """, unsafe_allow_html=True)
 
