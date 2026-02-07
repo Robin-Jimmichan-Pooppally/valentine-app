@@ -38,10 +38,12 @@ story = [
     "I had to leave for Kerala… for six long months.",
     "And you waited.",
     "You really waited for me.",
-    "",
     "Every hug when I came back felt like home.",
     "Every cuddle reminded me I was safe.",
     "You made me happier than I ever expected.",
+    "Thank you for always being there.",
+    "Thank you for loving me on my worst days.",
+    "Thank you for seeing the best in me, even when I couldn't see it myself.",
     "I know we had a lot of fights.",
     "I know I was never a perfect boyfriend.",
     "There were moments I didn't understand you the way I should have.",
@@ -53,6 +55,9 @@ story = [
     "Not the easy kind of love.",
     "But the kind that stays.",
     "Even when things get messy, confusing, or difficult.",
+    "Thank you for never giving up on us.",
+    "Thank you for your patience, your kindness, your heart.",
+    "You've given me more than I ever deserved.",
     "I don't want to promise perfection.",
     "I want to promise effort.",
     "Effort to listen more.",
@@ -60,6 +65,7 @@ story = [
     "To grow — not just for myself, but for us.",
     "If love is choosing someone again and again…",
     "Then my heart has always chosen you. 💗",
+    "Thank you for choosing me too.",
 ]
 
 # ---------------- STYLES ----------------
