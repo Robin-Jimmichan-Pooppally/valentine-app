@@ -217,7 +217,6 @@ elif not st.session_state.accepted:
     <div class="text">
         Will you be my Valentine? 💘
     </div>
-
     <div class="buttons">
         <button id="yes" onclick="finale()">YES 💖</button>
         <button id="no" onmouseover="moveNo(this)">NO 🙃</button>
