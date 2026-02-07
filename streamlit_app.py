@@ -195,26 +195,30 @@ elif not st.session_state.accepted:
     """, height=150)
 
 else:
-    # Message after YES - FIXED VERSION
+    # Message after YES - PROPERLY FIXED!
     st.balloons()
     
-    message = f"""
+    # Build the HTML properly
+    message_html = f"""
     <div class="text" style="margin-top: 80px;">
-        💖 You're officially my Valentine 💖<br><br>
-        
+        💖 You're officially my Valentine 💖
+    </div>
+    <div class="text" style="margin-top: 40px; font-size: 20px;">
         Thank you for saying yes, {NAME}.<br>
         Thank you for being mine.<br>
-        Thank you for being you.<br><br>
-        
+        Thank you for being you.
+    </div>
+    <div class="text" style="margin-top: 30px; font-size: 20px;">
         I promise to love you better every day.<br>
         I promise to make you smile more than I make you cry.<br>
-        I promise to always choose you.<br><br>
-        
+        I promise to always choose you.
+    </div>
+    <div class="text" style="margin-top: 30px; font-size: 20px;">
         I love you. Today, tomorrow, always. ❤️
     </div>
     """
     
-    st.markdown(message, unsafe_allow_html=True)
+    st.markdown(message_html, unsafe_allow_html=True)
 
 # ---------------- COUNTDOWN ----------------
 val_day = datetime(datetime.now().year, 2, 14)
