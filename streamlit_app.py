@@ -160,6 +160,7 @@ def typewriter(text):
 # ---------------- STORY ----------------
 
 story = [
+    f"{NAME}, before you scroll away… 💖",
     "May 5th — that’s when things changed between us.",
     "June 7th — that’s when we became *us*.",
     "",
