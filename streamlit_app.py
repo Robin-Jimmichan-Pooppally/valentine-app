@@ -1,170 +1,213 @@
 import streamlit as st
-import random
 import time
+import random
 from datetime import datetime
 
+# ---------------- CONFIG ----------------
 st.set_page_config(page_title="❤️", layout="wide")
 
-# ----------------- SECRETS -----------------
 NAME = st.secrets.get("NAME", "You")
 
-# ----------------- SESSION STATE -----------------
+# ---------------- SESSION STATE ----------------
 if "step" not in st.session_state:
     st.session_state.step = 0
 
-if "no_x" not in st.session_state:
-    st.session_state.no_x = 200
-    st.session_state.no_y = 40
+if "finale" not in st.session_state:
+    st.session_state.finale = False
 
-# ----------------- STYLES -----------------
-st.markdown(
-    f"""
-    <style>
-    body {{
-        background: radial-gradient(circle at top, #1b1b1b, #000);
-        color: white;
-        animation: heartbeat 3s infinite;
-    }}
+# ---------------- STYLES + JS ----------------
+st.markdown("""
+<style>
+html, body {
+    height: 100%;
+    background: radial-gradient(circle at top, #1a1a1a, #000);
+    color: white;
+    overflow-x: hidden;
+    animation: heartbeat 3s infinite;
+}
 
-    @keyframes heartbeat {{
-        0% {{ background-size: 100% 100%; }}
-        50% {{ background-size: 104% 104%; }}
-        100% {{ background-size: 100% 100%; }}
-    }}
+@keyframes heartbeat {
+    0% { background-size: 100% 100%; }
+    50% { background-size: 104% 104%; }
+    100% { background-size: 100% 100%; }
+}
 
-    .fade {{
-        animation: fadeUp 1.2s ease forwards;
-    }}
+.text {
+    text-align: center;
+    font-size: 22px;
+    line-height: 1.9;
+    max-width: 900px;
+    margin: 120px auto 40px;
+    animation: fadeUp 1.2s ease forwards;
+}
 
-    @keyframes fadeUp {{
-        from {{ opacity: 0; transform: translateY(30px); }}
-        to {{ opacity: 1; transform: translateY(0); }}
-    }}
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
-    .text {{
-        text-align: center;
-        font-size: 22px;
-        line-height: 1.9;
-        max-width: 900px;
-        margin: 120px auto 40px;
-    }}
+.buttons {
+    position: relative;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 60px;
+}
 
-    .buttons {{
-        display: flex;
-        justify-content: center;
-        gap: 40px;
-        position: relative;
-        height: 140px;
-    }}
+button {
+    font-size: 20px;
+    padding: 14px 36px;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+}
 
-    button {{
-        font-size: 20px;
-        padding: 14px 36px;
-        border-radius: 30px;
-        border: none;
-        cursor: pointer;
-    }}
+#yes {
+    background: #ff4d6d;
+    color: white;
+}
 
-    #yes {{
-        background: #ff4d6d;
-        color: white;
-    }}
+#no {
+    background: #444;
+    color: white;
+    position: absolute;
+}
 
-    #no {{
-        background: #444;
-        color: white;
-        position: absolute;
-        left: {st.session_state.no_x}px;
-        top: {st.session_state.no_y}px;
-    }}
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+#fadeBlack {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: black;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 3s ease;
+    z-index: 9999;
+}
 
-# ----------------- TYPEWRITER -----------------
+#fadeBlack.show {
+    opacity: 1;
+}
+
+svg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 9998;
+}
+</style>
+
+<script>
+function moveNo(btn){
+    const x = Math.random() * (window.innerWidth - 150);
+    const y = Math.random() * (window.innerHeight - 150);
+    btn.style.left = x + "px";
+    btn.style.top = y + "px";
+}
+
+function heartFireworks(){
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("width", window.innerWidth);
+    svg.setAttribute("height", window.innerHeight);
+
+    for(let i=0;i<40;i++){
+        const heart = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        heart.setAttribute("d","M10 30 A20 20 0 0 1 50 30 Q50 60 10 90 Q-30 60 -30 30 A20 20 0 0 1 10 30 Z");
+        heart.setAttribute("fill","pink");
+
+        const x = Math.random() * window.innerWidth;
+        const y = window.innerHeight;
+        const scale = Math.random() * 0.6 + 0.4;
+
+        heart.setAttribute("transform", `translate(${x},${y}) scale(${scale})`);
+
+        svg.appendChild(heart);
+
+        heart.animate([
+            { transform: `translate(${x}px,${y}px) scale(${scale})`, opacity: 1 },
+            { transform: `translate(${x + (Math.random()*200-100)}px,${y-600}px) scale(${scale})`, opacity: 0 }
+        ], {
+            duration: 2500,
+            easing: "ease-out"
+        });
+    }
+
+    document.body.appendChild(svg);
+    setTimeout(()=>svg.remove(),3000);
+}
+
+function finale(){
+    heartFireworks();
+    document.getElementById("fadeBlack").classList.add("show");
+}
+</script>
+
+<div id="fadeBlack"></div>
+""", unsafe_allow_html=True)
+
+# ---------------- TYPEWRITER ----------------
 def typewriter(text):
     placeholder = st.empty()
-    displayed = ""
-    for char in text:
-        displayed += char
-        placeholder.markdown(f"<div class='text fade'>{displayed}</div>", unsafe_allow_html=True)
+    shown = ""
+    for c in text:
+        shown += c
+        placeholder.markdown(f"<div class='text'>{shown}</div>", unsafe_allow_html=True)
         time.sleep(0.03)
 
-# ----------------- CONTENT -----------------
-paragraphs = [
+# ---------------- STORY ----------------
+story = [
     f"{NAME}, before you scroll away… 💖",
-
     "I know we had a lot of fights.",
-
     "I know I was never a perfect boyfriend.",
-
     "There were moments I didn’t understand you the way I should have.",
-
     "Moments where my silence hurt more than words.",
-
-    "But through every argument, every misunderstanding… one thing never changed.",
-
+    "But through every argument, every misunderstanding…",
+    "One thing never changed.",
     "I loved you.",
-
     "Not the easy kind of love.",
-
-    "The kind that stays even when things get messy, confusing, or difficult.",
-
+    "But the kind that stays.",
+    "Even when things get messy, confusing, or difficult.",
     "I don’t promise perfection.",
-
     "I promise effort.",
-
-    "Effort to listen more. To understand you deeper.",
-
-    "To grow — not just for myself… but for us.",
-
+    "Effort to listen more.",
+    "To understand you deeper.",
+    "To grow — not just for myself, but for us.",
     "If love is choosing someone again and again…",
-
     "Then my heart has always chosen you. ❤️"
 ]
 
-# ----------------- DISPLAY -----------------
-if st.session_state.step < len(paragraphs):
-    typewriter(paragraphs[st.session_state.step])
+# ---------------- FLOW ----------------
+if st.session_state.step < len(story):
+    typewriter(story[st.session_state.step])
 
     if st.button("Continue 💫"):
         st.session_state.step += 1
         st.rerun()
 
 else:
-    st.markdown(
-        """
-        <div class="text fade">
+    st.markdown("""
+    <div class="text">
         Will you be my Valentine? 💘
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-        if st.button("YES 💖"):
-            st.balloons()
-            st.markdown("## ❤️💥❤️💥❤️")
-            st.markdown("### You just made my heart explode 💖")
-
-    with col2:
-        if st.button("NO 🙃"):
-            st.session_state.no_x = random.randint(50, 400)
-            st.session_state.no_y = random.randint(10, 90)
-            st.rerun()
-
-# ----------------- COUNTDOWN -----------------
-valentine = datetime(datetime.now().year, 2, 14)
-days = (valentine - datetime.now()).days
-
-st.markdown(
-    f"""
-    <div style="text-align:center; margin-top:60px; opacity:0.8;">
-        ⏳ {days} days until Valentine’s Day 💕
     </div>
-    """,
-    unsafe_allow_html=True
-)
+
+    <div class="buttons">
+        <button id="yes" onclick="finale()">YES 💖</button>
+        <button id="no" onmouseover="moveNo(this)">NO 🙃</button>
+    </div>
+    """, unsafe_allow_html=True)
+
+    if st.button("I clicked YES 💕"):
+        st.balloons()
+
+# ---------------- COUNTDOWN ----------------
+val_day = datetime(datetime.now().year, 2, 14)
+days = (val_day - datetime.now()).days
+
+st.markdown(f"""
+<div style="text-align:center; margin-top:60px; opacity:0.8;">
+⏳ {days} days until Valentine’s Day 💞
+</div>
+""", unsafe_allow_html=True)
