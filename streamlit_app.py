@@ -1,143 +1,160 @@
 import streamlit as st
-import time
 import random
 
 # ---------------- CONFIG ----------------
-st.set_page_config(page_title="💖 A Question From My Heart", layout="centered")
+st.set_page_config(page_title="💖 Valentine 💖", layout="wide")
 
-# Get name from Streamlit Secrets
 NAME = st.secrets["NAME"]
 
-# ---------------- CSS ----------------
-st.markdown("""
-<style>
-body {
-    background: linear-gradient(to bottom right, #ffdde1, #ee9ca7);
-}
-
-.main {
-    text-align: center;
-}
-
-.big-text {
-    font-size: 28px;
-    font-weight: 600;
-    margin-top: 40px;
-}
-
-.story {
-    font-size: 20px;
-    margin-top: 25px;
-}
-
-.buttons {
-    margin-top: 40px;
-}
-
-button {
-    font-size: 20px !important;
-    padding: 12px 30px !important;
-    border-radius: 30px !important;
-}
-
-#no-btn {
-    position: relative;
-}
-</style>
-""", unsafe_allow_html=True)
-
 # ---------------- SESSION STATE ----------------
-if "step" not in st.session_state:
-    st.session_state.step = 0
+if "story_index" not in st.session_state:
+    st.session_state.story_index = 0
 
-if "yes_clicked" not in st.session_state:
-    st.session_state.yes_clicked = False
+if "finished" not in st.session_state:
+    st.session_state.finished = False
 
-# ---------------- INTRO ----------------
-if st.session_state.step == 0:
-    st.markdown(f"<div class='big-text'>{NAME}, before you scroll away… 💖</div>", unsafe_allow_html=True)
-    st.markdown("<div class='story'>there’s something I’ve been meaning to ask.</div>", unsafe_allow_html=True)
+if "no_pos" not in st.session_state:
+    st.session_state.no_pos = random.randint(-120, 120)
+
+# ---------------- STORY ----------------
+story = [
+    f"{NAME}, before you scroll away… 💖",
+    "There’s something I’ve been meaning to ask.",
+    "",
+    "May 6th — that’s when I met you.",
+    "June 7th — that’s when we became *us*.",
+    "",
+    "Then life happened.",
+    "I had to leave for Kerala… for six long months.",
+    "And you waited.",
+    "You really waited for me.",
+    "",
+    "Every hug when I came back felt like home.",
+    "Every cuddle reminded me I was safe.",
+    "You made me happier than I ever expected.",
+    "",
+    "I know we had a lot of fights.",
+    "I know I was never a perfect boyfriend.",
+    "There were moments I didn’t understand you the way I should have.",
+    "Moments where my silence hurt more than words.",
+    "Times where I wish I could go back and do things better.",
+    "",
+    "But through every argument…",
+    "Every misunderstanding…",
+    "One thing never changed — I loved you.",
+    "",
+    "Not the easy kind of love.",
+    "But the kind that stays.",
+    "Even when things get messy, confusing, or difficult.",
+    "",
+    "I don’t want to promise perfection.",
+    "I want to promise effort.",
+    "Effort to listen more.",
+    "To understand you deeper.",
+    "To grow — not just for myself, but for us.",
+    "",
+    "If love is choosing someone again and again…",
+    "Then my heart has always chosen you. 💗",
+]
+
+# ---------------- UI ----------------
+st.markdown(
+    """
+    <style>
+    body {
+        background: radial-gradient(circle at top, #1c1c1c, #000);
+        color: white;
+    }
+    .story {
+        text-align: center;
+        margin-top: 100px;
+        font-size: 22px;
+        line-height: 1.9;
+        max-width: 850px;
+        margin-left: auto;
+        margin-right: auto;
+        animation: fadeIn 1.2s ease-in-out;
+    }
+    .buttons {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        margin-top: 40px;
+    }
+    button {
+        font-size: 20px;
+        padding: 12px 30px;
+        border-radius: 30px;
+        border: none;
+        cursor: pointer;
+    }
+    #yes {
+        background: #ff4d6d;
+        color: white;
+    }
+    #no {
+        background: #444;
+        color: white;
+        position: relative;
+        left: VARLEFTpx;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    </style>
+    """.replace("VARLEFT", str(st.session_state.no_pos)),
+    unsafe_allow_html=True
+)
+
+# 🎶 Background music placeholder (add MP3 later)
+# st.audio("love.mp3", loop=True)
+
+# ---------------- STORY FLOW ----------------
+if not st.session_state.finished:
+
+    st.markdown(
+        f"""
+        <div class="story">
+            {story[st.session_state.story_index]}
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    st.write("")
+    st.write("")
 
     if st.button("Continue 💫"):
-        st.session_state.step = 1
-        st.rerun()
+        if st.session_state.story_index < len(story) - 1:
+            st.session_state.story_index += 1
+        else:
+            st.session_state.finished = True
 
-# ---------------- STORY (AUTO TYPING) ----------------
-elif st.session_state.step == 1:
-    story_lines = [
-        "May 6th — that’s when I met you. A normal day… that became unforgettable.",
-        "By June 7th, we were committed. Somehow, so naturally, my heart already knew.",
-        "Then life tested us. I had to leave for Kerala for six long months.",
-        "And you waited. Patiently. Faithfully. Loving me even from miles away.",
-        "Your hugs, our cuddles — they became my safest place.",
-        "Even when days were hard, you made me feel like home."
-    ]
-
-    placeholder = st.empty()
-
-    for i in range(len(story_lines)):
-        placeholder.markdown(
-            "<div class='story'>" + "<br>".join(story_lines[:i+1]) + "</div>",
-            unsafe_allow_html=True
-        )
-        time.sleep(1.2)
-
-    if st.button("One more thing… 💭"):
-        st.session_state.step = 2
-        st.rerun()
-
-# ---------------- EMOTIONAL PART ----------------
-elif st.session_state.step == 2:
-    emotional_lines = [
-        "I know we had a lot of fights.",
-        "I know I was never a perfect boyfriend.",
-        "There were moments I didn’t understand you the way I should have.",
-        "Moments where my silence hurt more than words.",
-        "But through every argument, one thing never changed — I loved you.",
-        "Not the easy kind of love… but the kind that stays.",
-        "I don’t promise perfection.",
-        "I promise effort. Growth. Choosing you — again and again."
-    ]
-
-    placeholder = st.empty()
-
-    for i in range(len(emotional_lines)):
-        placeholder.markdown(
-            "<div class='story'>" + "<br>".join(emotional_lines[:i+1]) + "</div>",
-            unsafe_allow_html=True
-        )
-        time.sleep(1.2)
-
-    if st.button("So… 💘"):
-        st.session_state.step = 3
-        st.rerun()
-
-# ---------------- QUESTION ----------------
-elif st.session_state.step == 3 and not st.session_state.yes_clicked:
-    st.markdown("<div class='big-text'>Will you be my Valentine? 💌</div>", unsafe_allow_html=True)
+else:
+    # ---------------- FINAL QUESTION ----------------
+    st.markdown(
+        f"""
+        <div class="story">
+            So here’s my question… 💖<br><br>
+            <strong>Will you be my Valentine?</strong>
+            <div class="buttons">
+                <button id="yes">YES 💘</button>
+                <button id="no">NO 🙃</button>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
     col1, col2 = st.columns(2)
 
     with col1:
         if st.button("YES 💘"):
-            st.session_state.yes_clicked = True
             st.balloons()
-            st.rerun()
+            st.success("YAY 💖 I LOVE YOU!")
 
     with col2:
-        # Fake NO button that "moves"
         if st.button("NO 🙃"):
+            st.session_state.no_pos = random.randint(-200, 200)
             st.warning("Nice try 😈")
-
-# ---------------- YES SCREEN ----------------
-elif st.session_state.yes_clicked:
-    st.markdown(f"<div class='big-text'>YAYYY 💖</div>", unsafe_allow_html=True)
-    st.markdown(
-        f"<div class='story'>I love you, {NAME}. You just made me the happiest person alive 🥹💞</div>",
-        unsafe_allow_html=True
-    )
-    st.balloons()
-
-# ---------------- MUSIC (Optional) ----------------
-# When you add love.mp3 to GitHub root, uncomment this:
-# st.audio("love.mp3", loop=True)
