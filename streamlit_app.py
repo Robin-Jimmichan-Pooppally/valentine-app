@@ -158,25 +158,42 @@ def typewriter(text):
         time.sleep(0.03)
 
 # ---------------- STORY ----------------
+
 story = [
-    f"{NAME}, before you scroll away… 💖",
+    "May 5th — that’s when things changed between us.",
+    "June 7th — that’s when we became *us*.",
+    "",
+    "Then life happened.",
+    "I had to leave for Kerala… for six long months.",
+    "And you waited.",
+    "You really waited for me.",
+    "",
+    "Every hug when I came back felt like home.",
+    "Every cuddle reminded me I was safe.",
+    "You made me happier than I ever expected.",
+    "",
     "I know we had a lot of fights.",
     "I know I was never a perfect boyfriend.",
     "There were moments I didn’t understand you the way I should have.",
     "Moments where my silence hurt more than words.",
-    "But through every argument, every misunderstanding…",
-    "One thing never changed.",
-    "I loved you.",
+    "Times where I wish I could go back and do things better.",
+    "",
+    "But through every argument…",
+    "Every misunderstanding…",
+    "One thing never changed — I loved you.",
+    "",
     "Not the easy kind of love.",
     "But the kind that stays.",
     "Even when things get messy, confusing, or difficult.",
-    "I don’t promise perfection.",
-    "I promise effort.",
+    "",
+    "I don’t want to promise perfection.",
+    "I want to promise effort.",
     "Effort to listen more.",
     "To understand you deeper.",
     "To grow — not just for myself, but for us.",
+    "",
     "If love is choosing someone again and again…",
-    "Then my heart has always chosen you. ❤️"
+    "Then my heart has always chosen you. 💗",
 ]
 
 # ---------------- FLOW ----------------
