@@ -227,7 +227,5 @@ st.markdown(f"""
 ⏳ {days} days until Valentine's Day 💞
 </div>
 """, unsafe_allow_html=True)
-```
 
----
 
