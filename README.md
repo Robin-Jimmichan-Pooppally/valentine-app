@@ -2,8 +2,6 @@
 
 An interactive, romantic web application to ask your special someone to be your Valentine! Built with Python and Streamlit.
 
-![Valentine's Day App](screenshot.png) <!-- Add a screenshot here -->
-
 ## ✨ Features
 
 - 📝 **Typewriter Effect Storytelling** - Your love story unfolds one message at a time
