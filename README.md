@@ -68,10 +68,6 @@ cp config_template.py config.py
 **5. Run the app:**
 ```bash
 streamlit run app.py
-```
-
-**6. Open in browser:**
-- The app will automatically open at `http://localhost:8501`
 - Share the link with your Valentine! 💖
 
 ---
