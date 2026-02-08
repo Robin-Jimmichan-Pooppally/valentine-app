@@ -2,8 +2,6 @@
 
 An interactive, romantic web application to ask your special someone to be your Valentine! Built with Python and Streamlit.
 
-![Valentine's Day App](screenshot.png) <!-- Add a screenshot here -->
-
 [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](YOUR_DEPLOYED_LINK_HERE)
 [![Python 3.7+](https://img.shields.io/badge/python-3.7+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
