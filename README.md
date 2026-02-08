@@ -350,9 +350,9 @@ story = [
 valentine-proposal/
 │
 ├── .streamlit/
-│   └── secrets.toml          # Your private config (gitignored)
+│   └── secrets.toml           # Your private config (gitignored)
 │
-├── app.py                     # Main application
+├── streamlit_app.py           # Main application
 ├── song.mp3                   # Your music file (add this)          
 ├── requirements.txt           # Python dependencies
 
